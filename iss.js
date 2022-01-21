@@ -39,12 +39,18 @@ const fetchCoordsByIP = function(ip, callback) {
         callback(error, null);
         return;
       }
+
+      if (response.statusCode !== 200) {
+        const msg = `Status code ${response.statusCode} when fetching IP. Response: ${body}`;
+        callback(Error(msg), null);
+        return;
+      }
+
       const {latitude, longitude} = JSON.parse(body);
       callback(null, {latitude, longitude});
     }
   );
 };
-
 
 
 
