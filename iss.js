@@ -31,4 +31,21 @@ const fetchMyIP = function(callback) {
     });
 };
 
-module.exports = {fetchMyIP};
+
+const fetchCoordsByIP = function(ip, callback) {
+  request('http://freegeoip.live/json/' + ip,
+    (error, response, body) => {
+      if (error) {
+        callback(error, null);
+        return;
+      }
+      const {latitude, longitude} = JSON.parse(body);
+      callback(null, {latitude, longitude});
+    }
+  );
+};
+
+
+
+
+module.exports = {fetchMyIP, fetchCoordsByIP};
