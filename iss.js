@@ -31,7 +31,6 @@ const fetchMyIP = function(callback) {
     });
 };
 
-
 const fetchCoordsByIP = function(ip, callback) {
   request('http://freegeoip.live/json/' + ip,
     (error, response, body) => {
@@ -41,7 +40,7 @@ const fetchCoordsByIP = function(ip, callback) {
       }
 
       if (response.statusCode !== 200) {
-        const msg = `Status code ${response.statusCode} when fetching IP. Response: ${body}`;
+        const msg = `Status code ${response.statusCode} when fetching Coordinates. Response: ${body}`;
         callback(Error(msg), null);
         return;
       }
@@ -63,7 +62,7 @@ const fetchFlyoverTimes = function(position, callback) {
       }
 
       if (response.statusCode !== 200) {
-        const msg = `Status code ${response.statusCode} when fetching IP. Response: ${body}`;
+        const msg = `Status code ${response.statusCode} when fetching ISS pass times. Response: ${body}`;
         callback(Error(msg), null);
         return;
       }
@@ -76,6 +75,31 @@ const fetchFlyoverTimes = function(position, callback) {
   );
 };
 
+const nextISSTimesForMyLocation = function(callback) {
 
 
-module.exports = {fetchMyIP, fetchCoordsByIP, fetchFlyoverTimes};
+  fetchMyIP((error, ip) => {
+    // console.log("IP?", ip);
+    if (error) {
+      return callback(error, null);
+    }
+    fetchCoordsByIP(ip, (error, coords) => {
+      // console.log("Coords ?", coords);
+      if (error) {
+        return callback(error, null);
+      }
+      fetchFlyoverTimes(coords, (error, times) => {
+        // console.log("Times ?", times);
+        if (error) {
+          return callback(error, null);
+        }
+        callback(null, times);
+      });
+    });
+  });
+
+
+
+};
+
+module.exports = {nextISSTimesForMyLocation};
