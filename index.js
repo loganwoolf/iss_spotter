@@ -6,6 +6,7 @@ fetchMyIP((error, ip) => {
     return;
   }
   console.log(`IP Address: ${ip}`);
+
   fetchCoordsByIP(ip, (error, data) => {
     if (error) {
       console.log('Geolocation didn\'t work', error);
@@ -14,8 +15,6 @@ fetchMyIP((error, ip) => {
     console.log(`Geolocation: ${data}`);
     console.log(data);
   });
+  
 });
 
-
-
-module.exports = { fetchMyIP };
